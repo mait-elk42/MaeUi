@@ -269,8 +269,8 @@ PHYSACDEF void ClosePhysics(void);                                              
 //----------------------------------------------------------------------------------
 // Defines and Macros
 //----------------------------------------------------------------------------------
-#define     min(a,b)                    (((a)<(b))?(a):(b))
-#define     max(a,b)                    (((a)>(b))?(a):(b))
+// #define     min(a,b)                    (((a)<(b))?(a):(b))
+// #define     max(a,b)                    (((a)>(b))?(a):(b))
 #define     PHYSAC_FLT_MAX              3.402823466e+38f
 #define     PHYSAC_EPSILON              0.000001f
 #define     PHYSAC_K                    1.0f/3.0f
@@ -1805,8 +1805,8 @@ static void CorrectPhysicsPositions(PhysicsManifold manifold)
         return;
 
     Vector2 correction = { 0.0f, 0.0f };
-    correction.x = (max(manifold->penetration - PHYSAC_PENETRATION_ALLOWANCE, 0.0f)/(bodyA->inverseMass + bodyB->inverseMass))*manifold->normal.x*PHYSAC_PENETRATION_CORRECTION;
-    correction.y = (max(manifold->penetration - PHYSAC_PENETRATION_ALLOWANCE, 0.0f)/(bodyA->inverseMass + bodyB->inverseMass))*manifold->normal.y*PHYSAC_PENETRATION_CORRECTION;
+    correction.x = (std::max(manifold->penetration - PHYSAC_PENETRATION_ALLOWANCE, 0.0f)/(bodyA->inverseMass + bodyB->inverseMass))*manifold->normal.x*PHYSAC_PENETRATION_CORRECTION;
+    correction.y = (std::max(manifold->penetration - PHYSAC_PENETRATION_ALLOWANCE, 0.0f)/(bodyA->inverseMass + bodyB->inverseMass))*manifold->normal.y*PHYSAC_PENETRATION_CORRECTION;
 
     if (bodyA->enabled)
     {
