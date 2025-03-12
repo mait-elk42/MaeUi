@@ -22,16 +22,14 @@ MaeUiParser::MaeUiParser(const string& maeuiFileName) {
 	      		if ( file.peek() != EOF )
 	      			line += '\n';
                 string cleanLine;
-	      		for ( int i = 0; i < line.length(); i++) {
-	      			if ( isspace(line[i]) ) line[i] = ' ';
-	      			cout << line[i] << ">";
+	      		for ( int i = 0; i < line.length();) {
+	      			if ( isspace(line[i]) && line[i] != '\n' ) line[i] = ' ';
+	      			cout << line[i];
 	      			// cleanLine.append({line[i]});
-	      			// if ( isspace(line[i]) ) {
-	      			// 	cout << line[i++];
-	      			// 	while ( i < line.length() && isspace(line[i]) ) { i++; }
-	      			// }else {
-	      			// 	cout << line[i++];
-	      			// }
+	      			// if ( line[i] == ' ' )
+	      			// 	while ( i < line.length() && line[i] == ' ' ) { i++; }
+	      			// else
+	      			// 	i++;
 	      		}
                 fileContent += cleanLine;
 	      }
