@@ -1,0 +1,11 @@
+
+template button (background: red, icon: hand.png) handbtn;
+
+layout rootlayout (background: black,  width: 100, height: 100, gravity: center) [
+    text hellotext (value: hello world textt, color: white),
+    button btn (icon: icon.png, background: green),
+    _handbtn(background: yellow),
+    layout childlayout (height: 10, width: 10, background: yellow) [
+        ...
+    ]
+];

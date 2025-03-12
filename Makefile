@@ -1,15 +1,15 @@
 
-LIB= -Llib -lraylib -lchipmunk -lGL -lm -lpthread -ldl -lrt -lX11
+LIB= #-Llib -lraylib -lchipmunk -lGL -lm -lpthread -ldl -lrt -lX11
 COMPILER= c++
 CFLAGS= -I include
-SRCS= src/Application.cpp
+SRCS= src/MaeUiNode.cpp src/MaeUiParser.cpp
 SRCS_O= $(SRCS:.cpp=.o)
-NAME= app
+NAME= maeui
 
 all: $(NAME)
 
 $(NAME): $(SRCS_O) main.cpp
-	$(COMPILER) main.cpp $(SRCS_O) $(CFLAGS) $(LIB) -o $(NAME) -D PHYSAC_IMPLEMENTATION
+	$(COMPILER) main.cpp $(SRCS_O) $(CFLAGS) $(LIB) -o $(NAME) #-D PHYSAC_IMPLEMENTATION
 
 src/%.o: src/%.cpp include/MaeUI/%.hpp
 	$(COMPILER) -c $(CFLAGS) $< $(CFLAGS) -o $@
