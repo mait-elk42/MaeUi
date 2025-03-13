@@ -6,9 +6,9 @@
 #include <MaeUI/Main.hpp>
 
 enum TOKEN_TYPE {
-	NONE,
-	WORD,
-	SYMBOL
+	TOKEN_TYPE_NONE,
+	TOKEN_TYPE_WORD,
+	TOKEN_TYPE_SYMBOL
 };
 
 class Token {

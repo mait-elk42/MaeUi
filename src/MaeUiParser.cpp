@@ -15,8 +15,25 @@ MaeUiParser::MaeUiParser(const string& maeuiFileName) {
     std::ifstream file(maeuiFileName);
 	if (file.is_open()) {
 		vector<Token> tokens = _tokenizeScript(_shrinkScript(file));
-		for ( const Token &t : tokens ) {
-			cout << "$> " << t.type << " <" << t.value << ">" << endl;
+		for ( vector<Token>::iterator it = tokens.begin(); it != tokens.end(); it++ ) {
+			Token& t = *it;
+			cout << "@> " << t.value << "==" << t.type << ";" << endl;
+			// if ( t.type == TOKEN_TYPE_WORD ) {
+			// 	cout << "$> word: " << t.value << endl;
+				// if ( t.value == "layout" ) {
+					// cout << "$> viewgroup::" << t.value << endl;
+					// if ( (it +1)->type == TOKEN_TYPE_SYMBOL && (it +1)->value == "(" ) {
+					//
+					// }
+					// for ( int j = 0; i <  ) {
+					//
+					// }
+					// break;
+			// 	}
+			// }
+			// else {
+			// 	cout << "$> symbole: " << t.value << endl;
+			// }
 		}
 		// cout << tokens_head->value << endl;
 	}else {
@@ -79,18 +96,15 @@ vector<Token>	MaeUiParser::_tokenizeScript(const string& script) {
 	for (const char c : script) {
 		if ( c == ' ' && !quoteMode ) {
 			if ( !part.empty() ) {
-				tokens.push_back({WORD, part});
-				// cout << "$> " << part << endl;
+				tokens.emplace_back(TOKEN_TYPE_WORD, part);
 				part = "";
 			}
 		} else if ( strchr("[](){},:;", c) && !quoteMode ) {
 			if ( !part.empty() ) {
-				tokens.push_back({WORD, part});
-				// cout << "$> " << part << endl;
+				tokens.emplace_back(TOKEN_TYPE_WORD, part);
 				part = "";
 			}
-			tokens.push_back({SYMBOL, {c}});
-			// cout << "$> <" << c << ">" << endl;
+			tokens.push_back({TOKEN_TYPE_SYMBOL, {c}});
 		} else {
 			if ( strchr("\"\'", c) ) {
 				if ( quoteMode == c )
