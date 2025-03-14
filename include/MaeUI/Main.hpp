@@ -7,6 +7,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <unordered_set>
 
 using std::cout;
 using std::cerr;
@@ -17,5 +18,6 @@ using std::vector;
 using std::ifstream;
 using std::exception;
 using std::runtime_error;
+using std::unordered_set;
 
 

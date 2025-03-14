@@ -12,14 +12,17 @@ enum HoldingTypes {
 };
 
 class MaeUiNode {
-  MaeUiNode();
-protected:
+public:
   HoldingTypes          type;
+  string                name;
+  string                value;
   MaeUiNode*            parent;
   map<string, string>   properties;
   vector<MaeUiNode>     childList;
-public:
-  MaeUiNode(HoldingTypes type);
+
+  MaeUiNode();
+  /** REMINDER: explicit keyword used to say hey you should call the constructor manually MaeUiNode obj(type) instead of MaeUiNode obj = type **/
+  explicit MaeUiNode(HoldingTypes type, const string& name, const string& value);
   MaeUiNode(MaeUiNode& parent, HoldingTypes type);
   virtual ~MaeUiNode();
 

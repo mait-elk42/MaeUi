@@ -11,32 +11,66 @@ MaeUiParser::MaeUiParser() {
 
 }
 
+MaeUiNode MaeUiParser::_parse_node(vector<Token>::iterator &it, const vector<Token>::iterator &end) {
+	MaeUiNode node;
+	if ( it != end ) {
+		if ( it->type == TTYPE_KEYWORD && it->value == "layout" ) {
+
+		}
+	}
+	return node;
+}
+
 MaeUiParser::MaeUiParser(const string& maeuiFileName) {
     std::ifstream file(maeuiFileName);
 	if (file.is_open()) {
 		vector<Token> tokens = _tokenizeScript(_shrinkScript(file));
-		for ( vector<Token>::iterator it = tokens.begin(); it != tokens.end(); it++ ) {
-			Token& t = *it;
-			cout << "@> " << t.value << "==" << t.type << ";" << endl;
-			// if ( t.type == TOKEN_TYPE_WORD ) {
-			// 	cout << "$> word: " << t.value << endl;
-				// if ( t.value == "layout" ) {
-					// cout << "$> viewgroup::" << t.value << endl;
-					// if ( (it +1)->type == TOKEN_TYPE_SYMBOL && (it +1)->value == "(" ) {
-					//
-					// }
-					// for ( int j = 0; i <  ) {
-					//
-					// }
-					// break;
-			// 	}
-			// }
-			// else {
-			// 	cout << "$> symbole: " << t.value << endl;
-			// }
+		MaeUiNode *node = nullptr;
+
+
+		for ( int i = 0; i < tokens.size(); i++) {
+			cout << tokens[i].type << "=" << tokens[i].value << endl;
 		}
+		/** 	Token& t = tokens[i];
+		//
+		// 	if ( t.type == TTYPE_KEYWORD ) {
+		// 		if ( t.value == "layout" )
+		// 			node = new MaeUiNode(HTYPE_GROUP, tokens[i +1].value, t.value);
+		// 		if ( t.value == "text" || t.value == "button" )
+		// 			node = new MaeUiNode(HTYPE_SOLO, tokens[i +1].value, t.value);
+		// 	}
+		//
+		// 	if ( t.type == TTYPE_OPEN_PROP ) {
+		// 		if ( node == nullptr ) {
+		// 			throw runtime_error("unknown view add these props to him");
+		// 		}
+		// 		while ( i < tokens.size() && t.type != TTYPE_CLOSE_PROP ) {
+		// 			while ( i < tokens.size() && tokens[i].type != TTYPE_COMMA && tokens[i].type != TTYPE_CLOSE_PROP ) i++;
+		//
+		// 			const Token& prop_key = tokens[i - 3];
+		// 			const Token& prop_val = tokens[i -1];
+		//
+		// 			if ( prop_key.type != TTYPE_VALUE || prop_val.type != TTYPE_VALUE ) {
+		// 				throw runtime_error("error occurred in property key or value :>");
+		// 			}
+		//
+		// 			node->addProperty(prop_key.value, prop_val.value);
+		//
+		// 			cout << prop_key.value << "=" << prop_val.value << "-> for " << node->name << endl;
+		// 			i++;
+		//
+		// 			if ( tokens[i -1].type == TTYPE_CLOSE_PROP )
+		// 				break;
+		// 		}
+		// 		delete node;
+		// 		node = nullptr;
+		// 	}
+		// 	i++;
+		// }
+		**/
+
 		// cout << tokens_head->value << endl;
-	}else {
+	} else {
 		throw runtime_error("File: '" + maeuiFileName + "' is not exist or permission denied");
 	}
 }
@@ -96,15 +130,40 @@ vector<Token>	MaeUiParser::_tokenizeScript(const string& script) {
 	for (const char c : script) {
 		if ( c == ' ' && !quoteMode ) {
 			if ( !part.empty() ) {
-				tokens.emplace_back(TOKEN_TYPE_WORD, part);
+				if ( keywords.find(part) != keywords.end() )
+					tokens.emplace_back(TTYPE_KEYWORD, part);
+				else
+					tokens.emplace_back(TTYPE_VALUE, part);
 				part = "";
 			}
-		} else if ( strchr("[](){},:;", c) && !quoteMode ) {
+		} else if ( strchr("<>[](){},:;", c) && !quoteMode ) {
 			if ( !part.empty() ) {
-				tokens.emplace_back(TOKEN_TYPE_WORD, part);
+				if ( keywords.find(part) != keywords.end() )
+					tokens.emplace_back(TTYPE_KEYWORD, part);
+				else
+					tokens.emplace_back(TTYPE_VALUE, part);
 				part = "";
 			}
-			tokens.push_back({TOKEN_TYPE_SYMBOL, {c}});
+			switch ( c ) {
+				case '(':
+					tokens.push_back({TTYPE_OPEN_PROP, {c}});
+				break;
+				case ')':
+					tokens.push_back({TTYPE_CLOSE_PROP, {c}});
+				break;
+				case ',':
+					tokens.push_back({TTYPE_COMMA, {c}});
+				break;
+				case '<':
+					tokens.push_back({TTYPE_OPEN_TAG, {c}});
+				break;
+				case '>':
+					tokens.push_back({TTYPE_CLOSE_TAG, {c}});
+				break;
+				default:
+					tokens.push_back({TTYPE_SYM, {c}});
+					break;
+			}
 		} else {
 			if ( strchr("\"\'", c) ) {
 				if ( quoteMode == c )

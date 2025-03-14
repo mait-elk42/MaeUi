@@ -4,11 +4,22 @@
 
 #pragma once
 #include <MaeUI/Main.hpp>
+#include <MaeUI/MaeUiNode.hpp>
+
+const unordered_set<string> keywords = {
+	"viewgroup",
+	"view"
+};
 
 enum TOKEN_TYPE {
-	TOKEN_TYPE_NONE,
-	TOKEN_TYPE_WORD,
-	TOKEN_TYPE_SYMBOL
+	TTYPE_KEYWORD,
+	TTYPE_VALUE,
+	TTYPE_OPEN_PROP,
+	TTYPE_CLOSE_PROP,
+	TTYPE_COMMA,
+	TTYPE_OPEN_TAG,
+	TTYPE_CLOSE_TAG,
+	TTYPE_SYM
 };
 
 class Token {
@@ -21,8 +32,9 @@ public:
 
 class MaeUiParser {
 MaeUiParser();
-string _shrinkScript(ifstream& file);
+string			_shrinkScript(ifstream& file);
 vector<Token>	_tokenizeScript(const string& script);
+MaeUiNode		_parse_node(vector<Token>::iterator &it, const vector<Token>::iterator &end);
 public:
 	MaeUiParser(const string& maeuiFileName);
 	~MaeUiParser();

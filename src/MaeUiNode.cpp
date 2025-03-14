@@ -6,7 +6,7 @@
 
 MaeUiNode::MaeUiNode() {  }
 
-MaeUiNode::MaeUiNode(HoldingTypes type) : parent(NULL), type(type) {  }
+MaeUiNode::MaeUiNode(HoldingTypes type, const string& name, const string& value) : parent(NULL), type(type), name(name), value(value) {  }
 
 MaeUiNode::MaeUiNode(MaeUiNode& parent, HoldingTypes type) : parent(&parent), type(type) {  }
 

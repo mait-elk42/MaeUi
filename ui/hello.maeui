@@ -1,8 +1,11 @@
 
-@commentiiir osf hhh
-
-layout rootlayout ( background: "black, width: hhhh",  width: "100", height: "100", gravity: "center" ) [
-    text hellotext (value: "hello world textt", color: "white"),
-    button btn (icon: "icon.png", background: "green")
+viewgroup<vlinear> rootlayout (background: black,  width: 100, height: 100, gravity: center) [
+    view<text> hellotext (
+        value: "hello",
+        color: "white"
+    ),
+    view<button> btn (
+        icon: "icon.png",
+        background: "green"
+    )
 ];
-
