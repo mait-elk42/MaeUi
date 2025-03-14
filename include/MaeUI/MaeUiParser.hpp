@@ -17,8 +17,7 @@ enum TOKEN_TYPE {
 	TTYPE_OPEN_PROP,
 	TTYPE_CLOSE_PROP,
 	TTYPE_COMMA,
-	TTYPE_OPEN_TAG,
-	TTYPE_CLOSE_TAG,
+	TTYPE_TAG,
 	TTYPE_SYM
 };
 
@@ -34,7 +33,7 @@ class MaeUiParser {
 MaeUiParser();
 string			_shrinkScript(ifstream& file);
 vector<Token>	_tokenizeScript(const string& script);
-MaeUiNode		_parse_node(vector<Token>::iterator &it, const vector<Token>::iterator &end);
+MaeUiNode		_parse_node(vector<Token> &tokens);
 public:
 	MaeUiParser(const string& maeuiFileName);
 	~MaeUiParser();

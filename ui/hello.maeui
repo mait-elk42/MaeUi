@@ -1,10 +1,10 @@
 
-viewgroup<vlinear> rootlayout (background: black,  width: 100, height: 100, gravity: center) [
-    view<text> hellotext (
+viewgroup<vlinear> rootlayout  (background: black,  width: 100, height: 100, gravity: center) [
+    view <text> hellotext (
         value: "hello",
         color: "white"
     ),
-    view<button> btn (
+    view <button> btn (
         icon: "icon.png",
         background: "green"
     )

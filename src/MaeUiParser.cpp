@@ -11,12 +11,34 @@ MaeUiParser::MaeUiParser() {
 
 }
 
-MaeUiNode MaeUiParser::_parse_node(vector<Token>::iterator &it, const vector<Token>::iterator &end) {
+MaeUiNode MaeUiParser::_parse_node(vector<Token> &tokens) {
 	MaeUiNode node;
-	if ( it != end ) {
-		if ( it->type == TTYPE_KEYWORD && it->value == "layout" ) {
+	for ( int i = 0; i < tokens.size(); i++ ) {
+		const Token &token = tokens[i];
+		if ( token.type == TTYPE_KEYWORD )
+			node.type = token.value;
+		// the last thing you do it chnging enum to string type in maeuinode
+		else if ( token.type == TTYPE_TAG )
+			node.tag = token.value;
+		else if ( token.type == TTYPE_OPEN_PROP ) {
+			++i;
+			while ( i != tokens.size() && tokens[i].type != TTYPE_CLOSE_PROP ) {
+				int j = 0;
+				while ( i != tokens.size() && tokens[i].type != TTYPE_COMMA && tokens[i].type != TTYPE_CLOSE_PROP ) {++i; ++j;}
 
+				if ( j != 3 ) {
+					throw runtime_error("bad property in " + node.type);
+				}
+				cout << j << endl;
+
+				cout << tokens[(i -3)].value << ":=:" << tokens[(i -1)].value << endl;
+				if ( tokens[i].type == TTYPE_COMMA )
+					++i;
+			}
+		}else if ( token.type == TTYPE_VALUE && node.id.empty() ) {
+			node.id = token.value;
 		}
+
 	}
 	return node;
 }
@@ -25,12 +47,11 @@ MaeUiParser::MaeUiParser(const string& maeuiFileName) {
     std::ifstream file(maeuiFileName);
 	if (file.is_open()) {
 		vector<Token> tokens = _tokenizeScript(_shrinkScript(file));
-		MaeUiNode *node = nullptr;
+		_parse_node(tokens);
 
-
-		for ( int i = 0; i < tokens.size(); i++) {
-			cout << tokens[i].type << "=" << tokens[i].value << endl;
-		}
+		// for ( int i = 0; i < tokens.size(); i++) {
+		// 	cout << tokens[i].type << "=" << tokens[i].value << endl;
+		// }
 		/** 	Token& t = tokens[i];
 		//
 		// 	if ( t.type == TTYPE_KEYWORD ) {
@@ -126,7 +147,8 @@ vector<Token>	MaeUiParser::_tokenizeScript(const string& script) {
 	vector<Token> tokens;
 	cout << script << endl;
 	char quoteMode = 0;
-	string part = "";
+	bool tagWhile = false;
+	string part;
 	for (const char c : script) {
 		if ( c == ' ' && !quoteMode ) {
 			if ( !part.empty() ) {
@@ -138,7 +160,10 @@ vector<Token>	MaeUiParser::_tokenizeScript(const string& script) {
 			}
 		} else if ( strchr("<>[](){},:;", c) && !quoteMode ) {
 			if ( !part.empty() ) {
-				if ( keywords.find(part) != keywords.end() )
+				if ( tagWhile ) {
+					tokens.emplace_back(TTYPE_TAG, part);
+				}
+				else if ( keywords.find(part) != keywords.end() )
 					tokens.emplace_back(TTYPE_KEYWORD, part);
 				else
 					tokens.emplace_back(TTYPE_VALUE, part);
@@ -155,10 +180,10 @@ vector<Token>	MaeUiParser::_tokenizeScript(const string& script) {
 					tokens.push_back({TTYPE_COMMA, {c}});
 				break;
 				case '<':
-					tokens.push_back({TTYPE_OPEN_TAG, {c}});
+					tagWhile = true;
 				break;
 				case '>':
-					tokens.push_back({TTYPE_CLOSE_TAG, {c}});
+					tagWhile = false;
 				break;
 				default:
 					tokens.push_back({TTYPE_SYM, {c}});
